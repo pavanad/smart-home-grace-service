@@ -6,3 +6,4 @@ exclude =
     __pycache__
     .pytest_cache
     .vscode
+    app/__init__.py
