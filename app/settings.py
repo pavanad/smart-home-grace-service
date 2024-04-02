@@ -10,3 +10,6 @@ DESCRIPTION = "API for the Grace Service"
 QUERY_SUMMARY = (
     "Submit a question to the API and get an answer or a action based in the tools."
 )
+
+# Agent details
+MODEL_NAME = "gemini-pro"
