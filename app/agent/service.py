@@ -1,5 +1,7 @@
 from langchain import hub
 from langchain.agents import AgentExecutor, create_structured_chat_agent
+from langchain.memory import ConversationBufferMemory
+from langchain_core.messages import HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 from app.settings import MODEL_NAME
@@ -17,12 +19,22 @@ class GraceService:
             model=MODEL_NAME, convert_system_message_to_human=True
         )
         prompt = hub.pull("hwchase17/structured-chat-agent")
+        memory = ConversationBufferMemory()
         agent = create_structured_chat_agent(llm, tools, prompt)
         agent_executor = AgentExecutor(
-            agent=agent, tools=tools, verbose=True, handle_parsing_errors=True
+            agent=agent,
+            tools=tools,
+            verbose=True,
+            handle_parsing_errors=True,
+            memory=memory,
         )
         return agent_executor
 
     def execute(self, query: str) -> str:
-        result = self._agent_executor.invoke({"input": query})
+        input = f"""
+        {query}
+        Always respond in the language of the question.
+        """
+        print(input)
+        result = self._agent_executor.invoke({"input": input})
         return result.get("output", "")
