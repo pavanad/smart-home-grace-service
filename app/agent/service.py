@@ -1,7 +1,6 @@
 from langchain import hub
 from langchain.agents import AgentExecutor, create_structured_chat_agent
 from langchain.memory import ConversationBufferMemory
-from langchain_core.messages import HumanMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 from app.settings import MODEL_NAME
@@ -31,10 +30,6 @@ class GraceService:
         return agent_executor
 
     def execute(self, query: str) -> str:
-        input = f"""
-        {query}
-        Always respond in the language of the question.
-        """
-        print(input)
+        input = f"{query}\nAlways respond in the language of the question."
         result = self._agent_executor.invoke({"input": input})
         return result.get("output", "")

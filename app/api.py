@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
@@ -13,10 +14,18 @@ grace_service = {}
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
-    Initialize FastAPI and load model
+    Initialize FastAPI and load service
     """
     load_dotenv()
     grace_service["service"] = GraceService()
+
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s %(levelname)s (%(name)s) %(message)s",
+        datefmt="%d-%m-%Y %H:%M:%S",
+        filename="logs/grace_service.log",
+        filemode="a",
+    )
     yield
     grace_service.clear()
 

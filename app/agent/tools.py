@@ -27,7 +27,7 @@ def who_are_you():
     Hello! I'm Grace, your smart assistant for a connected home.
     My name, "Grace", stands for "Generative AI Recognition And Control Expert",
     reflecting my ability to understand and control your home using generative AI.
-    I'm here to help with environment analysis, smart home device control, 
+    I'm here to help with environment analysis, smart home device control,
     and image analysis.
     """
     return about
