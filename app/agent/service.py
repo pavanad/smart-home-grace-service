@@ -13,11 +13,13 @@ class GraceService:
         self._agent_executor = self.__create_grace_service()
 
     def __create_grace_service(self):
-        tools = [cctv_image_analysis, smart_home_control, who_are_you]
+
         llm = ChatGoogleGenerativeAI(
             model=MODEL_NAME, convert_system_message_to_human=True
         )
+        tools = [cctv_image_analysis, smart_home_control, who_are_you]
         prompt = hub.pull("hwchase17/structured-chat-agent")
+
         memory = ConversationBufferMemory()
         agent = create_structured_chat_agent(llm, tools, prompt)
         agent_executor = AgentExecutor(
