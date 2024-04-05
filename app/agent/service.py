@@ -32,6 +32,9 @@ class GraceService:
         return agent_executor
 
     def execute(self, query: str) -> str:
-        input = f"{query}\nAlways respond in the language of the question."
+        input = f"""
+        {query}
+        IMPORTANT: Always respond in the language of the question.
+        """
         result = self._agent_executor.invoke({"input": input})
         return result.get("output", "")
