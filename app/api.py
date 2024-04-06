@@ -1,4 +1,5 @@
 import logging
+import os
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
@@ -36,6 +37,9 @@ app = FastAPI(lifespan=lifespan, title=settings.TITLE, description=settings.DESC
 @app.post("/query", summary=settings.QUERY_SUMMARY)
 def query(request: QueryRequest):
     try:
+        if request.chat_id is not None:
+            os.environ["USER_CHAT_ID"] = str(request.chat_id)
+
         response = grace_service["service"].execute(request.message)
         return {"result": f"{response}"}
     except Exception as e:

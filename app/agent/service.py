@@ -5,7 +5,12 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 from app.settings import MODEL_NAME
 
-from .tools import cctv_image_analysis, smart_home_control, who_are_you
+from .tools import (
+    cctv_image_analysis,
+    cctv_send_images,
+    smart_home_control,
+    who_are_you,
+)
 
 
 class GraceService:
@@ -17,7 +22,7 @@ class GraceService:
         llm = ChatGoogleGenerativeAI(
             model=MODEL_NAME, convert_system_message_to_human=True
         )
-        tools = [cctv_image_analysis, smart_home_control, who_are_you]
+        tools = [cctv_image_analysis, smart_home_control, who_are_you, cctv_send_images]
         prompt = hub.pull("hwchase17/structured-chat-agent")
 
         memory = ConversationBufferMemory()
@@ -32,9 +37,6 @@ class GraceService:
         return agent_executor
 
     def execute(self, query: str) -> str:
-        input = f"""
-        {query}
-        IMPORTANT: Always respond in the language of the question.
-        """
-        result = self._agent_executor.invoke({"input": input})
+        message = f"{query}\nIMPORTANT: Always respond in the language of the question."
+        result = self._agent_executor.invoke({"input": message})
         return result.get("output", "")

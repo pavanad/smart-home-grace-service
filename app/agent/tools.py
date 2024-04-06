@@ -1,4 +1,46 @@
+import logging
+import os
+
 from langchain.tools import tool
+
+from app.services.bot import BotTelegram
+from app.services.video import VideoStream
+from app.settings import get_list_cameras
+
+logger = logging.getLogger(__name__)
+
+
+@tool
+def cctv_send_images():
+    """
+    Useful when you want to send images from security
+    cameras (CCTV) in the house to the requesting user.
+    """
+    chat_id = os.environ.get("USER_CHAT_ID", None)
+    if chat_id is None:
+        return "Please provide chat_id"
+
+    bot = BotTelegram()
+    bot.set_chat_id(chat_id)
+    video_stream = VideoStream()
+
+    response = {"success": [], "error": []}
+    list_cameras = get_list_cameras()
+    for camera in list_cameras:
+        try:
+            video_stream.set_rtsp_url(camera["url"])
+            frame = video_stream.get_frame()
+            bot.send_photo(frame)
+            response["success"].append(camera["name"])
+        except Exception as e:
+            logger.error(f"Error sending image from camera {camera['name']}: {e}")
+            response["error"].append(camera["name"])
+
+    return f"""
+    Result of sending images:
+    Success: {response["success"]}
+    Error: {response["error"]}
+    """
 
 
 @tool
