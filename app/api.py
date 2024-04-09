@@ -1,25 +1,34 @@
+import logging
+import os
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 
 from app import settings
+from app.agent.service import GraceService
 from app.models import QueryRequest
 
-# from app.services.agent import create_agent
-
-grace_assistant = {}
+grace_service = {}
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
-    Initialize FastAPI and load model
+    Initialize FastAPI and load service
     """
     load_dotenv()
-    grace_assistant["agent"] = None
+    grace_service["service"] = GraceService()
+
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s %(levelname)s (%(name)s) %(message)s",
+        datefmt="%d-%m-%Y %H:%M:%S",
+        filename="logs/grace_service.log",
+        filemode="a",
+    )
     yield
-    grace_assistant.clear()
+    grace_service.clear()
 
 
 app = FastAPI(lifespan=lifespan, title=settings.TITLE, description=settings.DESCRIPTION)
@@ -28,8 +37,10 @@ app = FastAPI(lifespan=lifespan, title=settings.TITLE, description=settings.DESC
 @app.post("/query", summary=settings.QUERY_SUMMARY)
 def query(request: QueryRequest):
     try:
-        response = ""
-        # response = grace_assistant["agent"]({"input": request.message})["output"]
+        if request.chat_id is not None:
+            os.environ["USER_CHAT_ID"] = str(request.chat_id)
+
+        response = grace_service["service"].execute(request.message)
         return {"result": f"{response}"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
