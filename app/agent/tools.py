@@ -4,6 +4,7 @@ import os
 from langchain.tools import tool
 
 from app.services.bot import BotTelegram
+from app.services.detection import ObjectDetection
 from app.services.video import VideoStream
 from app.settings import get_list_cameras
 
@@ -46,8 +47,21 @@ def cctv_send_images():
 @tool
 def cctv_image_analysis():
     """
-    Useful for when you need to analyze an image.
+    Useful when you need to analyze images from security cameras using computer vision.
+    The tool will analyze and return all objects detected in the image from each camera.
     """
+    detection = ObjectDetection()
+    video_stream = VideoStream()
+    list_cameras = get_list_cameras()
+    for camera in list_cameras:
+        try:
+            video_stream.set_rtsp_url(camera["url"])
+            frame = video_stream.get_frame()
+            detection.set_frame(frame)
+            detection.detect()
+        except Exception as e:
+            logger.error(f"Error analyzing image from camera {camera['name']}: {e}")
+
     return "CCTV Image Analysis"
 
 
