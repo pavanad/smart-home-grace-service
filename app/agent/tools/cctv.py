@@ -18,7 +18,6 @@ def cctv_send_images():
     """
     Useful when you want to send images from security
     cameras (CCTV) in the house to the requesting user.
-    Use when the user asks to identify objects, people, animals, cars, etc.
     """
     chat_id = os.environ.get("USER_CHAT_ID", None)
     if chat_id is None:
@@ -51,6 +50,7 @@ def cctv_send_images():
 def cctv_image_analysis():
     """
     Useful when you need to analyze images from security cameras using computer vision.
+    Use when the user asks to identify objects, people, animals, cars, etc.
     The tool will analyze and return all objects detected in the image from each camera.
     """
     response = {}
@@ -83,26 +83,13 @@ def cctv_image_analysis():
 
 
 @tool
-def smart_home_control():
+def cctv_list_cameras():
     """
-    Useful for when you need to control smart home devices.
+    Useful when you need to list all the cameras in the house.
+    Use only if the user wants to know which cameras are available.
+    The tool will return a list of all the cameras in the house.
     """
-    return "Smart Home Control"
+    list_cameras = [camera["name"] for camera in get_list_cameras()]
+    names_cameras = f"\n".join(list_cameras)
 
-
-@tool
-def who_are_you():
-    """
-    Useful for when you need to know who you are and what your skills are.
-    """
-
-    logger.info("Sending who are you message")
-
-    return """
-    Meet Grace - Your Smart Assistant for a Connected Home.
-    Hello! I'm Grace, your smart assistant for a connected home.
-    My name, "Grace", stands for "Generative AI Recognition And Control Expert",
-    reflecting my ability to understand and control your home using generative AI.
-    I'm here to help with environment analysis, smart home device control,
-    and image analysis.
-    """
+    return f"Here are the list of cameras:\n{names_cameras}\n"
