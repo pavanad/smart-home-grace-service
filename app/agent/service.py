@@ -1,3 +1,5 @@
+import logging
+
 from langchain import hub
 from langchain.agents import AgentExecutor, create_structured_chat_agent
 from langchain.memory import ConversationBufferMemory
@@ -15,10 +17,11 @@ from .tools import (
 
 class GraceService:
     def __init__(self):
+        self.__logger = logging.getLogger(__name__)
         self._agent_executor = self.__create_grace_service()
 
     def __create_grace_service(self):
-
+        self.__logger.info("Creating Grace Service")
         llm = ChatGoogleGenerativeAI(
             model=MODEL_NAME, convert_system_message_to_human=True
         )
@@ -37,6 +40,7 @@ class GraceService:
         return agent_executor
 
     def execute(self, query: str) -> str:
+        self.__logger.info(f"Executing Grace Service: {query}")
         message = f"{query}\nIMPORTANT: Always respond in the language of the question."
         result = self._agent_executor.invoke({"input": message})
         return result.get("output", "")
