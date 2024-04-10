@@ -85,11 +85,14 @@ def cctv_image_analysis():
 @tool
 def cctv_list_cameras():
     """
-    Useful when you need to list all the cameras in the house.
-    Use only if the user wants to know which cameras are available.
-    The tool will return a list of all the cameras in the house.
+    Useful when you need only to list all the cameras in the house.
+    Never use to analyze cameras. The tool will return a list of all
+    the cameras in the house.
     """
     list_cameras = [camera["name"] for camera in get_list_cameras()]
-    names_cameras = f"\n".join(list_cameras)
 
-    return f"Here are the list of cameras:\n{names_cameras}\n"
+    response = "Here are the list of cameras:\n"
+    for camera in list_cameras:
+        response += f"- {camera}\n"
+
+    return response

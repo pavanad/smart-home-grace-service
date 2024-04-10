@@ -44,6 +44,6 @@ class GraceService:
 
     def execute(self, query: str) -> str:
         self.__logger.info(f"Executing Grace Service: {query}")
-        message = f"{query}\nIMPORTANT: Always respond in the language of the question."
+        message = f"{query}\nIMPORTANT: Always respond in Portuguese Brazil."
         result = self._agent_executor.invoke({"input": message})
         return result.get("output", "")
