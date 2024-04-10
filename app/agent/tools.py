@@ -4,7 +4,7 @@ import os
 from langchain.tools import tool
 
 from app.services.bot import BotTelegram
-from app.services.detection import ObjectDetection
+from app.services.detection.yolo import YoloDetection
 from app.services.video import VideoStream
 from app.settings import get_list_cameras
 
@@ -54,7 +54,7 @@ def cctv_image_analysis():
     The tool will analyze and return all objects detected in the image from each camera.
     """
     response = {}
-    detection = ObjectDetection()
+    detection = YoloDetection()
     list_cameras = get_list_cameras()
     chat_id = os.environ.get("USER_CHAT_ID", None)
 

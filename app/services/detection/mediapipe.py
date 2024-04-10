@@ -10,10 +10,10 @@ from numpy.core.numeric import ndarray
 from app.settings import BASE_DIR
 
 
-class ObjectDetection:
+class MediaPipeDetection:
 
-    THRESHOLD = 0.65
-    MODELS_DIR = f"{BASE_DIR}/app/services/model"
+    THRESHOLD = 0.6
+    MODELS_DIR = f"{BASE_DIR}/app/services/models/mediapipe"
 
     def __init__(self) -> None:
         self.__logger = logging.getLogger(__name__)
@@ -36,14 +36,14 @@ class ObjectDetection:
 
         base_options = python.BaseOptions(model_asset_buffer=model_data)
         options = vision.ObjectDetectorOptions(
-            base_options=base_options, score_threshold=0.5
+            base_options=base_options, score_threshold=self.THRESHOLD
         )
         return vision.ObjectDetector.create_from_options(options)
 
     def __show_results(self, detection_result):
 
         margin = 10  # pixels
-        text_color = (255, 0, 0)  # red
+        text_color = (0, 0, 255)  # red
         image = np.copy(self.__frame.numpy_view())
 
         for detection in detection_result.detections:
@@ -52,7 +52,7 @@ class ObjectDetection:
             bbox = detection.bounding_box
             start_point = bbox.origin_x, bbox.origin_y
             end_point = bbox.origin_x + bbox.width, bbox.origin_y + bbox.height
-            cv2.rectangle(image, start_point, end_point, text_color, 3)
+            cv2.rectangle(image, start_point, end_point, text_color, 2)
 
             # draw label and score
             category = detection.categories[0]
@@ -74,6 +74,8 @@ class ObjectDetection:
 
     def set_frame(self, frame: ndarray, channel: int = 1):
         """Set frame from the video."""
+        height, width = frame.shape[:2]
+        print(height, width)
         self.__frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
 
     def detect(self) -> list:
@@ -83,8 +85,7 @@ class ObjectDetection:
             category = detection.categories[0]
             category_name = category.category_name
             probability = round(category.score, 2)
-            if probability >= self.THRESHOLD:
-                response.append({"category": category_name, "probability": probability})
+            response.append({"category": category_name, "probability": probability})
 
         self.__show_results(detection_result)
 
