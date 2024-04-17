@@ -14,10 +14,15 @@ logger = logging.getLogger(__name__)
 
 
 @tool
-def cctv_send_images():
+def cctv_send_images(cam_selected: str = "all"):
     """
     Useful when you want to send images from security
     cameras (CCTV) in the house to the requesting user.
+    To use the tool, you need to provide the one parameter: [camera].
+    For example to send the image from the camera named "Social Gate",
+    you would need the input "Social Gate".
+    If user not provide the camera name, the tool will send the
+    image from all cameras.
     """
     chat_id = os.environ.get("USER_CHAT_ID", None)
     if chat_id is None:
@@ -31,6 +36,8 @@ def cctv_send_images():
 
     for camera in list_cameras:
         try:
+            if camera["name"] not in cam_selected and cam_selected != "all":
+                continue
             video_stream.set_rtsp_url(camera["url"])
             frame = video_stream.get_frame()
             bot.send_photo(frame)
@@ -38,6 +45,10 @@ def cctv_send_images():
         except Exception as e:
             logger.error(f"Error sending image from camera {camera['name']}: {e}")
             response["error"].append(camera["name"])
+
+    results = any([response["success"], response["error"]])
+    if not results:
+        return "No images were sent."
 
     return f"""
     Result of sending images:
@@ -47,11 +58,16 @@ def cctv_send_images():
 
 
 @tool
-def cctv_image_analysis():
+def cctv_image_analysis(cam_selected: str = "all"):
     """
     Useful when you need to analyze images from security cameras using computer vision.
     Use when the user asks to identify objects, people, animals, cars, etc.
     The tool will analyze and return all objects detected in the image from each camera.
+    To use the tool, you need to provide the one parameter: [camera].
+    For example to analyze the image from the camera named "Social Gate",
+    you would need the input "Social Gate".
+    If user not provide the camera name, the tool will analyze the image
+    from all cameras.
     """
     response = {}
     detection = YoloDetection()
@@ -70,8 +86,12 @@ def cctv_image_analysis():
             response[camera["name"]] = results
 
             if results:
-                bot.set_chat_id(chat_id)
-                bot.send_photo(detection.annotated_frame)
+                send_results = any(
+                    [camera["name"] in cam_selected, cam_selected == "all"]
+                )
+                if send_results:
+                    bot.set_chat_id(chat_id)
+                    bot.send_photo(detection.annotated_frame)
 
         except Exception as e:
             logger.error(f"Error analyzing image from camera {camera['name']}: {e}")

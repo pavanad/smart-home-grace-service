@@ -30,8 +30,9 @@ class GraceService:
             cctv_list_cameras,
         ]
         prompt = hub.pull("hwchase17/structured-chat-agent")
-
-        memory = ConversationBufferMemory()
+        memory = ConversationBufferMemory(
+            memory_key="chat_history", return_messages=True
+        )
         agent = create_structured_chat_agent(llm, tools, prompt)
         agent_executor = AgentExecutor(
             agent=agent,
@@ -42,8 +43,8 @@ class GraceService:
         )
         return agent_executor
 
-    def execute(self, query: str) -> str:
-        self.__logger.info(f"Executing Grace Service: {query}")
-        message = f"{query}\nIMPORTANT: Always respond in Portuguese Brazil."
+    def execute(self, message: str) -> str:
+        self.__logger.info(f"Executing Grace Service: {message}")
+        message = f"{message}\nIMPORTANT: Always respond in Portuguese Brazil."
         result = self._agent_executor.invoke({"input": message})
         return result.get("output", "")
