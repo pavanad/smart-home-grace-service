@@ -33,6 +33,7 @@ def get_list_cameras():
     try:
         with open(filename, "r") as f:
             data = yaml.safe_load(f)
+            logger.info(f"Loaded cameras from '{filename}'.")
             return data.get("cameras", [])
     except FileNotFoundError:
         logger.error(f"File '{filename}' not found.")

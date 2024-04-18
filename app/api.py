@@ -27,6 +27,7 @@ async def lifespan(app: FastAPI):
         filename="logs/grace_service.log",
         filemode="a",
     )
+    grace_service["logger"] = logging.getLogger(__name__)
     yield
     grace_service.clear()
 
@@ -43,4 +44,5 @@ def query(request: QueryRequest):
         response = grace_service["service"].execute(request.message)
         return {"result": f"{response}"}
     except Exception as e:
+        grace_service["logger"].error(str(e))
         raise HTTPException(status_code=500, detail=str(e))
