@@ -41,3 +41,13 @@ class HomeAssistantClient:
 
     def get_switches(self) -> list:
         return self.__get_states_filter("switch.")
+
+    def get_binary_sensor(self) -> list:
+        return self.__get_states_filter("binary_sensor.")
+
+    def set_entity_state(self, entity: str, state: str):
+        service = entity.split(".")[0]
+        url = f"{self.__host}/api/services/{service}/turn_{state}"
+        print(url)
+        response = requests.post(url, headers=self.__header, json={"entity_id": entity})
+        return response.json()

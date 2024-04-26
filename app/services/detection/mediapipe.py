@@ -75,7 +75,6 @@ class MediaPipeDetection:
     def set_frame(self, frame: ndarray, channel: int = 1):
         """Set frame from the video."""
         height, width = frame.shape[:2]
-        print(height, width)
         self.__frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
 
     def detect(self) -> list:
