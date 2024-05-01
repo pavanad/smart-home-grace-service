@@ -14,10 +14,10 @@ def who_are_you():
     logger.info("Sending who are you message")
 
     return """
-    Meet Grace - Your Smart Assistant for a Connected Home.
-    Hello! I'm Grace, your smart assistant for a connected home.
+    Meet Grace - Your Smart Assistant.
+    Hello! I'm Grace, your smart assistant.
     My name, "Grace", stands for "Generative AI Recognition And Control Expert",
     reflecting my ability to understand and control your home using generative AI.
-    I'm here to help with environment analysis, smart home device control,
+    I'm here to help with sensor analysis, smart home device control,
     and image analysis.
     """

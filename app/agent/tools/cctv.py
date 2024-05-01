@@ -34,9 +34,11 @@ def cctv_send_images(cam_selected: str = "all"):
     list_cameras = get_list_cameras()
     response = {"success": [], "error": []}
 
+    sanitity_cam_selected = cam_selected.replace(" ", "").lower()
     for camera in list_cameras:
         try:
-            if camera["name"] not in cam_selected and cam_selected != "all":
+            name = camera["name"].replace(" ", "").lower()
+            if sanitity_cam_selected not in name and sanitity_cam_selected != "all":
                 continue
             video_stream.set_rtsp_url(camera["url"])
             frame = video_stream.get_frame()

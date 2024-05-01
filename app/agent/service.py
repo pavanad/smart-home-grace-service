@@ -9,7 +9,11 @@ from app.settings import MODEL_NAME
 
 from .tools.about import who_are_you
 from .tools.cctv import cctv_image_analysis, cctv_list_cameras, cctv_send_images
-from .tools.home import smart_home_control
+from .tools.home import (
+    smart_home_gate_state,
+    smart_home_light_set_state,
+    smart_home_lights_state,
+)
 
 
 class GraceService:
@@ -24,7 +28,9 @@ class GraceService:
         )
         tools = [
             cctv_image_analysis,
-            smart_home_control,
+            smart_home_lights_state,
+            smart_home_gate_state,
+            smart_home_light_set_state,
             who_are_you,
             cctv_send_images,
             cctv_list_cameras,
