@@ -1,8 +1,11 @@
+import logging
+
 from langchain.tools import tool
 
 from app.services.home_assistant import HomeAssistantClient
 
 client = HomeAssistantClient()
+logger = logging.getLogger(__name__)
 
 
 @tool
@@ -11,6 +14,8 @@ def smart_home_lights_state():
     Useful for when you need to get status of the light devices or entities
     from the smart home.
     """
+    logger.info("Getting smart home lights state")
+
     results = ""
     lights = get_filtered_lights()
     for item in lights:
@@ -35,6 +40,8 @@ def smart_home_light_set_state(entity: str, state: str):
     For example to set the state of the light named "Living Room",
     you would need the input "Living Room" and the state "on" or "off".
     """
+    logger.info("Setting smart home lights state")
+
     lights = get_filtered_lights()
     entity_name = entity.replace(" ", "").lower()
     for item in lights:
@@ -51,6 +58,8 @@ def smart_home_gate_state():
     """
     Useful for when you need to get status of the gate from the smart home.
     """
+    logger.info("Getting smart home gates state")
+
     results = ""
     sensors = client.get_binary_sensor()
     for item in sensors:

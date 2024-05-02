@@ -111,6 +111,7 @@ def cctv_list_cameras():
     Never use to analyze cameras. The tool will return a list of all
     the cameras in the house.
     """
+    logger.info("Listing all the cameras in the house")
     list_cameras = [camera["name"] for camera in get_list_cameras()]
 
     response = "Here are the list of cameras:\n"

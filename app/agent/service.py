@@ -7,13 +7,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 from app.settings import MODEL_NAME
 
-from .tools.about import who_are_you
-from .tools.cctv import cctv_image_analysis, cctv_list_cameras, cctv_send_images
-from .tools.home import (
-    smart_home_gate_state,
-    smart_home_light_set_state,
-    smart_home_lights_state,
-)
+from .tools import get_tools
 
 
 class GraceService:
@@ -26,15 +20,8 @@ class GraceService:
         llm = ChatGoogleGenerativeAI(
             model=MODEL_NAME, convert_system_message_to_human=True
         )
-        tools = [
-            cctv_image_analysis,
-            smart_home_lights_state,
-            smart_home_gate_state,
-            smart_home_light_set_state,
-            who_are_you,
-            cctv_send_images,
-            cctv_list_cameras,
-        ]
+
+        tools = get_tools()
         prompt = hub.pull("hwchase17/structured-chat-agent")
         memory = ConversationBufferMemory(
             memory_key="chat_history", return_messages=True
