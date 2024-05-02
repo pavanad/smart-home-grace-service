@@ -1,1 +1,1 @@
-The directory required for saving application logs.
+**The directory required for saving application logs.**
