@@ -2,7 +2,6 @@ import logging
 import os
 from contextlib import asynccontextmanager
 
-from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 
 from app import settings
@@ -17,7 +16,6 @@ async def lifespan(app: FastAPI):
     """
     Initialize FastAPI and load service
     """
-    load_dotenv()
     grace_service["service"] = GraceService()
 
     logging.basicConfig(

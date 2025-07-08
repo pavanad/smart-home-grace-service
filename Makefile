@@ -1,4 +1,4 @@
-.PHONY: help api clean lint
+.PHONY: help run clean lint
 
 .DEFAULT: help
 
@@ -6,12 +6,12 @@ help:
 	@echo "\nUsage:"
 	@echo "make <command>"
 	@echo "\nAvailable Commands:"
-	@echo "- api\t\t\t Run the local API"
+	@echo "- run\t\t\t Run the local API"
 	@echo "- clean\t\t\t Run clean project"
 	@echo "- lint\t\t\t Check python code against some of the style conventions in PEP 8\n\n"
 
 
-api:
+run:
 	@echo "\n> Run the local API\n";\
 	uvicorn app.api:app --host 0.0.0.0 --port 8000 --reload
 

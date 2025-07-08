@@ -60,7 +60,7 @@ class YoloDetection:
         # determine only the *output* layer names that we need from YOLO
         self.__layer_names = net.getLayerNames()
         self.__layer_names = [
-            self.__layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()
+            self.__layer_names[i - 1] for i in net.getUnconnectedOutLayers()
         ]
         return net
 

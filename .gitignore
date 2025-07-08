@@ -164,3 +164,4 @@ cython_debug/
 *.tflite
 *.weights
 cameras.yml
+poetry.lock
