@@ -9,6 +9,9 @@ import os
 from pathlib import Path
 
 import yaml
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Project details
 TITLE = "API - Grace Service"
@@ -18,7 +21,7 @@ QUERY_SUMMARY = (
 )
 
 # Agent details
-MODEL_NAME = "gemini-pro"
+MODEL_NAME = "gemini-2.0-flash"
 
 # Telegram
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
